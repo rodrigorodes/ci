@@ -1,0 +1,21 @@
+pipeline {
+    agent {
+        node {
+            label 'master'
+        }
+    }
+
+    stages {
+        stage('Copy Artifacts') {
+            steps {
+                step ([$class: 'CopyArtifact', projectName: 'build_modules']);
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'cp -f ./target/* /var/liferay-deploy/'
+            }
+        }
+    }
+}

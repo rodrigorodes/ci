@@ -1,0 +1,44 @@
+def modules = []
+modules = env.Module.toString().split(",")
+def runAll = "".equals(modules[0])
+def gitBranch = env.BRANCH_NAME
+
+pipeline {
+    agent {
+        node {
+            label 'master'
+        }
+    }
+
+    stages {
+        stage('SCM') {
+            steps {
+                script {
+                    if (null == gitBranch || "".equals(gitBranch)) {
+                        gitBranch = scm.branches[0].name
+                    }
+
+                    gitBranch = gitBranch.replace("*/", "").replace("refs/heads/","")
+                }
+
+                git url: 'https://github.com/rodrigorodes/ci.git', branch: "$gitBranch"
+            }
+        }
+
+        stage('Generate Artifacts') {
+            steps {
+                script {
+                    dir (env.WORKSPACE) {
+                        sh 'mvn clean package'
+                   }
+                }
+            }
+
+            post {
+                success {
+                  archiveArtifacts artifacts: "**/target/*", fingerprint: true
+                }
+            }
+        }
+    }
+}
