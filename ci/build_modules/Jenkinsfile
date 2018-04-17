@@ -41,10 +41,10 @@ pipeline {
             }
         }
 
-        stage('Generate Artifacts') {
+        stage('Build Project') {
             steps {
                 script {
-                    dir (env.WORKSPACE) {
+                    dir (env) {
                         sh 'mvn clean install'
                    }
                 }
