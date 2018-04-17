@@ -29,24 +29,14 @@ pipeline {
 
         stage('SCM') {
             steps {
-                script {
-                    if (null == gitBranch || "".equals(gitBranch)) {
-                        gitBranch = scm.branches[0].name
-                    }
-
-                    gitBranch = gitBranch.replace("*/", "").replace("refs/heads/","")
-                }
-
-                git url: 'https://github.com/rodrigorodes/ci.git', branch: "$gitBranch"
+               git url: 'https://github.com/rodrigorodes/ci.git', branch: "$gitBranch"
             }
         }
 
         stage('Build Project') {
             steps {
                 script {
-                    dir (env) {
-                        sh 'mvn clean install'
-                   }
+                   sh 'mvn clean install'
                 }
             }
 
