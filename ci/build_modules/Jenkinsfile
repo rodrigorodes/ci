@@ -44,8 +44,8 @@ pipeline {
         stage('Build Project') {
             steps {
                 script {
-                    dir ("deploy_argentum") {
-                        sh 'mvn clean install'
+                    dir (env.WORKSPACE) {
+                        sh '../mvn clean install'
                    }
                 }
             }
